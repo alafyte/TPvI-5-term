@@ -1,0 +1,11 @@
+.table-albums {
+    margin: 0 auto;
+}
+
+.album-form {
+    width: 30%;
+}
+.error-message {
+    color:red;
+    font-style:italic;
+}
