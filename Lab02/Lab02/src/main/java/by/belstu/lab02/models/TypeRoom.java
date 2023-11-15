@@ -16,7 +16,7 @@ public class TypeRoom {
     Integer id;
 
     @Column
-    String name_type;
+    String nameType;
 
     @Column
     String info;
@@ -25,6 +25,6 @@ public class TypeRoom {
     float price;
 
     public String toString(){
-        return name_type;
+        return nameType;
     }
 }

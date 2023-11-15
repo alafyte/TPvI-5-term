@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
 @Entity
 @Table(name = "ROOM")
