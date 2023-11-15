@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: java_postgres
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "hotel_db"
+      POSTGRES_USER: "hoteladmin"
+      POSTGRES_PASSWORD: "hoteladminpg19"
+    ports:
+      - "5432:5432"
