@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Список работников</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:insert="~{adminMenu :: copy}"></div>
+<h1 class="text-center">
+    Список работников
+</h1>
+<div class="container">
+    <h3>
+        <a href="/create-worker">Создать работника</a>
+    </h3>
+    <h3>
+        <a href="/register-worker">Зарегистрировать работника в приложении</a>
+    </h3>
+    <div style="color: red; font-style: italic;"></div>
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">Должность</th>
+            <th scope="col">Email</th>
+            <th scope="col">Телефон</th>
+            <th scope="col">Опыт</th>
+            <th scope="col">Изменить</th>
+            <th scope="col">Удалить</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="worker : ${workers}">
+            <th scope="row" th:text="${worker.getId()}"></th>
+            <td th:text="${worker.getLastName()}"></td>
+            <td th:text="${worker.getFirstName()}"></td>
+            <td th:text="${worker.getSecondName()}"></td>
+            <td th:text="${worker.getPosition()}"></td>
+            <td th:text="${worker.getEmail()}"></td>
+            <td th:text="${worker.getPhone()}"></td>
+            <td th:text="${worker.getExperience()}"></td>
+            <td><a th:href="@{/edit-worker/{id}(id=${worker.getId()})}">Изменить</a></td>
+            <td><a th:href="@{/delete-worker/{id}(id=${worker.getId()})}">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
