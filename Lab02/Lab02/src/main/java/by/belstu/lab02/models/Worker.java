@@ -35,4 +35,18 @@ public class Worker {
 
     @Column
     private int experience;
+
+    public Worker(String lastName, String firstName, String secondName, String position, String phone, String email, int experience) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.position = position;
+        this.phone = phone;
+        this.email = email;
+        this.experience = experience;
+    }
+
+    public String getFullName() {
+        return lastName + " " + firstName + " " + secondName + " ";
+    }
 }

@@ -26,7 +26,7 @@ public class User {
     @Column
     String password;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id")
     Role roles;
 
@@ -34,4 +34,5 @@ public class User {
         this.login = login;
         this.password = encode;
     }
+
 }

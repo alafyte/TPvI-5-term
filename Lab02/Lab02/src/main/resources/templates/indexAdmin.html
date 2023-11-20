@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div th:insert="adminMenu :: copy"></div>
+<div th:insert="~{adminMenu :: copy}"></div>
 <div class="container">
     <h1>Добро пожаловать, <span th:text="${user.getLogin()}"></span>!</h1>
 </div>
