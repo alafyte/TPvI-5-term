@@ -1,7 +1,6 @@
 package by.belstu.lab02.contollers;
 
-import by.belstu.lab02.dto.CreateWorkerRequest;
-import by.belstu.lab02.dto.EditWorkerRequest;
+import by.belstu.lab02.dto.WorkerRequest;
 import by.belstu.lab02.models.Worker;
 import by.belstu.lab02.services.EmailSenderService;
 import by.belstu.lab02.services.WorkerServices;
@@ -41,7 +40,7 @@ public class WorkerController {
     }
 
     @PostMapping("/create-worker")
-    public ResponseEntity<?> createWorker(@RequestBody CreateWorkerRequest createWorkerRequest) {
+    public ResponseEntity<?> createWorker(@RequestBody WorkerRequest createWorkerRequest) {
         Worker newWorker = new Worker(
                 createWorkerRequest.getLastname(),
                 createWorkerRequest.getFirstname(),
@@ -65,7 +64,7 @@ public class WorkerController {
     }
 
     @PostMapping("/edit-worker")
-    public ResponseEntity<?> editWorker(@RequestBody EditWorkerRequest editWorkerRequest) {
+    public ResponseEntity<?> editWorker(@RequestBody WorkerRequest editWorkerRequest) {
         Worker newWorker = new Worker(
                 editWorkerRequest.getId(),
                 editWorkerRequest.getLastname(),

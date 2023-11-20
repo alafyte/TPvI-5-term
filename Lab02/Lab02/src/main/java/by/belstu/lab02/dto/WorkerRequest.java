@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EditWorkerRequest {
+public class WorkerRequest {
     private int id;
     private String lastname;
     private String firstname;
@@ -16,5 +16,4 @@ public class EditWorkerRequest {
     private String phone;
     private String email;
     private int experience;
-
 }

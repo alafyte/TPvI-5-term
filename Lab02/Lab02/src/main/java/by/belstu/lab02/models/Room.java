@@ -19,6 +19,9 @@ public class Room {
     @Column
     int number;
 
+    @Column
+    String photo;
+
     @OneToOne
     @JoinColumn(name = "type_of_rooms")
     TypeRoom typeOfRooms;
