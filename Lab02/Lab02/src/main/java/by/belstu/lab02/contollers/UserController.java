@@ -113,7 +113,7 @@ public class UserController {
         User user = userServices.findByLogin(adminAuthDto.getLogin()).orElseThrow();
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication, user.getRoles().toString());
-        response.addCookie(new Cookie("token", token));
+        response.addCookie(new Cookie("java_token", token));
 
         LoginResponseDto responseDto = new LoginResponseDto();
         responseDto.setSuccess(true);

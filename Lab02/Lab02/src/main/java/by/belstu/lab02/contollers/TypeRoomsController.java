@@ -37,10 +37,7 @@ public class TypeRoomsController {
 
     @GetMapping("/create-type-room")
     public ModelAndView createTypeRoom(Model model) {
-        ModelAndView modelAndView = new ModelAndView("CreateTypeRoom");
-        TypeRoomForm typeRoomForm = new TypeRoomForm();
-        model.addAttribute("typeroomform", typeRoomForm);
-        return modelAndView;
+        return new ModelAndView("CreateTypeRoom");
     }
 
     @PostMapping("/create-type-room")
