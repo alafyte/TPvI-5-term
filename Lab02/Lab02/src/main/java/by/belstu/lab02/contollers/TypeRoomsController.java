@@ -2,11 +2,9 @@ package by.belstu.lab02.contollers;
 
 
 import by.belstu.lab02.dto.TypeRoomRequest;
-import by.belstu.lab02.forms.TypeRoomForm;
 import by.belstu.lab02.models.TypeRoom;
 import by.belstu.lab02.services.TypeRoomServices;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
