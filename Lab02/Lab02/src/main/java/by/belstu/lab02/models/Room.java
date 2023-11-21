@@ -22,23 +22,19 @@ public class Room {
     @Column
     String photo;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "type_of_rooms")
     TypeRoom typeOfRooms;
 
     @Column
     int countOfPlaces;
 
-    //    public void SetToServices(){
-//        RoomServices roomServices = new RoomServices();
-//        Room newRoom = roomServices.findRoom(this.id);
-//        if (newRoom != null){
-//            this.number = newRoom.number;
-//            this.type_rooms = newRoom.type_rooms;
-//            this.count_places = newRoom.count_places;
-//        }
-//    }
-
+    public Room(int number, String photo, TypeRoom typeOfRooms, int countOfPlaces) {
+        this.number = number;
+        this.photo = photo;
+        this.typeOfRooms = typeOfRooms;
+        this.countOfPlaces = countOfPlaces;
+    }
 
     public float getPrice() {
         return countOfPlaces * 10 + typeOfRooms.getPrice();

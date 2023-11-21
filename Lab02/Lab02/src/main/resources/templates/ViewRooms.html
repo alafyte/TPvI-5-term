@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Комнаты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:insert="~{adminMenu :: copy}"></div>
+
+<h1 class="text-center">
+    Номера
+</h1>
+<div class="container">
+    <h2>
+        <a href="/create-room">Создать номер</a>
+    </h2>
+
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th scope="col">Номер</th>
+            <th scope="col">Количество мест</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Тип</th>
+            <th scope="col">Изображение</th>
+            <th scope="col">Изменить</th>
+            <th scope="col">Удалить</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="room : ${rooms}">
+            <td th:text="${room.getNumber()}"></td>
+            <td th:text="${room.getCountOfPlaces()}"></td>
+            <td th:text="${room.getCountOfPlaces() * 10 + room.getTypeOfRooms().getPrice()}"></td>
+            <td th:text="${room.getTypeOfRooms().getNameType()}"></td>
+            <td>
+                <img width="250" th:src="${room.getPhoto()}" alt="room"/>
+            </td>
+            <td>
+                <a th:href="@{/edit-room/{id}(id=${room.getId()})}">Изменить</a>
+            </td>
+            <td>
+                <a th:href="@{/delete-room/{id}(id=${room.getId()})}">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
