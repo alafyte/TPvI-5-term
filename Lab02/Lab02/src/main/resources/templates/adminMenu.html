@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Меню</title>
+</head>
+<body>
+<div th:fragment="copy" class="container">
+  <header class="d-flex justify-content-center py-3">
+    <ul class="nav nav-pills">
+      <!--            <li class="nav-item"><a th:href="@{/CreateGuest}" class="nav-link">Добавить гостя</a></li>-->
+      <li class="nav-item"><a th:href="@{/ViewGuest}" class="nav-link">Гости</a></li>
+      <li class="nav-item"><a th:href="@{/view-rooms}" class="nav-link">Комнаты</a></li>
+      <li class="nav-item"><a th:href="@{/view-type-rooms}" class="nav-link">Типы комнат</a></li>
+      <li class="nav-item"><a th:href="@{/ViewService}" class="nav-link">Услуги</a></li>
+      <li class="nav-item"><a th:href="@{/ViewReservation}" class="nav-link">Бронирование</a></li>
+      <li class="nav-item"><a th:href="@{/view-workers}" class="nav-link">Работники</a></li>
+      <li class="nav-item"><a th:href="@{/view-users}" class="nav-link">Пользователи</a></li>
+      <li class="nav-item"><a th:href="@{/logout}" class="nav-link">Выйти</a></li>
+    </ul>
+  </header>
+
+  <!--        <li><a th:href="@{/ViewOrders/{id}(id=${user})}">Просмотр всех заказов</a></li>-->
+</div>
+</body>
+</html>
