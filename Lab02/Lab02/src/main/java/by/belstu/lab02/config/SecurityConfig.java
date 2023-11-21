@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/ViewReservation").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
                         .requestMatchers("/view-rooms").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
                         .requestMatchers("/ViewServices").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
-                        .requestMatchers("/ViewTypeRooms").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
+                        .requestMatchers("/view-type-rooms").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
                         .requestMatchers("/view-workers").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/view-users").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/ViewPayments").hasAuthority(Roles.ADMIN.toString())
@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/CreateReservation/*").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
                         .requestMatchers("/CreateRoom").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/CreateService").hasAuthority(Roles.ADMIN.toString())
-                        .requestMatchers("/CreateTypeRoom").hasAuthority(Roles.ADMIN.toString())
+                        .requestMatchers("/create-type-room").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/register-worker").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/create-worker").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/CreatePayments/*").hasAuthority(Roles.ADMIN.toString())
@@ -70,7 +70,8 @@ public class SecurityConfig {
                         .requestMatchers("/EditReservation/*").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
                         .requestMatchers("/EditRoom/*").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/EditService/*").hasAuthority(Roles.ADMIN.toString())
-                        .requestMatchers("/EditTypeRoom/*").hasAuthority(Roles.ADMIN.toString())
+                        .requestMatchers("/edit-type-room/*").hasAuthority(Roles.ADMIN.toString())
+                        .requestMatchers("/edit-type-room").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/EditUser/*").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/edit-worker/*").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/edit-worker").hasAuthority(Roles.ADMIN.toString())
@@ -78,13 +79,13 @@ public class SecurityConfig {
                         .requestMatchers("/DeleteReservation/*").hasAnyAuthority(Roles.ADMIN.toString(), Roles.WORKER.toString())
                         .requestMatchers("/DeleteRooms/*").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/DeleteServices/*").hasAuthority(Roles.ADMIN.toString())
-                        .requestMatchers("/DeleteTypeRooms/*").hasAuthority(Roles.ADMIN.toString())
+                        .requestMatchers("/delete-type-room/*").hasAuthority(Roles.ADMIN.toString())
                         .requestMatchers("/delete-worker/*").hasAuthority(Roles.ADMIN.toString())
                         )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID", "token")
+                        .deleteCookies("JSESSIONID", "java_token")
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter(),

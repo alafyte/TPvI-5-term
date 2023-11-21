@@ -24,6 +24,12 @@ public class TypeRoom {
     @Column
     float price;
 
+    public TypeRoom(String nameType, String info, float price) {
+        this.nameType = nameType;
+        this.info = info;
+        this.price = price;
+    }
+
     public String toString(){
         return nameType;
     }
