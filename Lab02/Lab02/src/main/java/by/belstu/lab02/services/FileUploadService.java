@@ -51,4 +51,14 @@ public class FileUploadService {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
+    
+    public void deleteFileByName(String fileName) {
+        try {
+            Path filePath = Paths.get(fileName).toAbsolutePath().normalize();
+            Files.deleteIfExists(filePath);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not delete file " + fileName + ". Please try again!", ex);
+        }
+    }
+
 }

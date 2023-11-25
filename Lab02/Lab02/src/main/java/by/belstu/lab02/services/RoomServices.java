@@ -29,6 +29,8 @@ public class RoomServices {
     }
 
     public void deleteRoom(int id) {
+        Room room = roomRepository.findById(id).get();
+        fileUploadService.deleteFileByName("." + room.getPhoto());
         roomRepository.deleteById(id);
     }
 

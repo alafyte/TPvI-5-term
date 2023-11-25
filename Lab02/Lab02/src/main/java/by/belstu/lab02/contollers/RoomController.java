@@ -92,12 +92,14 @@ public class RoomController {
                                       @RequestParam("count_places") int count_places,
                                       @RequestParam("id_type_rooms") int id_type_rooms
     ) {
+        Room oldRoom = roomServices.findRoom(id);
         TypeRoom typeRooms = typeRoomsServices.findTypeRooms(id_type_rooms);
         String fileName = "";
 
         if (Objects.equals(file.getOriginalFilename(), "")) {
-            fileName = roomServices.findRoom(id).getPhoto();
+            fileName = oldRoom.getPhoto();
         } else {
+            fileUploadService.deleteFileByName("." + oldRoom.getPhoto());
             fileName = STATIC_PATH + fileUploadService.storeFile(file);
         }
 
