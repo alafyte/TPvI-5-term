@@ -72,12 +72,9 @@ public class TypeRoomsController {
 
 
     @GetMapping("/delete-type-room/{id}")
-    public ModelAndView deleteTypeRoom(ModelAndView modelAndView, @PathVariable int id) {
+    public String deleteTypeRoom(ModelAndView modelAndView, @PathVariable int id) {
         typeRoomsServices.deleteTypeRooms(id);
-        modelAndView.setViewName("ViewTypeRooms");
-        List<TypeRoom> typerooms = typeRoomsServices.getTypeRooms();
-        modelAndView.addObject("typerooms", typerooms);
-        return modelAndView;
+        return "redirect:/view-type-rooms";
     }
 
 }

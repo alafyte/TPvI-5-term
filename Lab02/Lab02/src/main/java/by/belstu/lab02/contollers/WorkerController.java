@@ -81,11 +81,9 @@ public class WorkerController {
 
 
     @GetMapping("/delete-worker/{id}")
-    public ModelAndView deleteWorker(ModelAndView modelAndView, @PathVariable int id) {
+    public String deleteWorker(ModelAndView modelAndView, @PathVariable int id) {
         workerServices.delete(id);
-        modelAndView.setViewName("ViewWorkers");
-        modelAndView.addObject("workers", workerServices.findAll());
-        return modelAndView;
+        return "redirect:/view-workers";
     }
 
 

@@ -112,14 +112,11 @@ public class RoomController {
 
 
     @GetMapping(value = {"/delete-room/{id}"})
-    public ModelAndView DeleteRoom(Model model, @PathVariable int id) {
-        ModelAndView modelAndView = new ModelAndView("ViewRooms");
+    public String DeleteRoom(Model model, @PathVariable int id) {
         roomServices.deleteRoom(id);
-        List<Room> rooms = roomServices.getRooms();
-        model.addAttribute("rooms", rooms);
 
         log.info("/delete-room GET");
-        return modelAndView;
+        return "redirect:/view-rooms";
     }
 
 }
