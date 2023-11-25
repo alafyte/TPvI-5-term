@@ -75,9 +75,9 @@ public class RoomController {
 
     //Вызов формы редактирования номера
     @GetMapping(value = {"/edit-room/{id}"})
-    public ModelAndView EditRoom(Model model, @PathVariable String id) {
+    public ModelAndView EditRoom(Model model, @PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("EditRoom");
-        Room room = roomServices.findRoom(Integer.parseInt(id));
+        Room room = roomServices.findRoom(id);
         List<TypeRoom> typerooms = typeRoomsServices.getTypeRooms();
         modelAndView.addObject("typeroomList", typerooms);
         model.addAttribute("room", room);
@@ -112,9 +112,9 @@ public class RoomController {
 
 
     @GetMapping(value = {"/delete-room/{id}"})
-    public ModelAndView DeleteRoom(Model model, @PathVariable String id) {
+    public ModelAndView DeleteRoom(Model model, @PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("ViewRooms");
-        roomServices.deleteRoom(Integer.parseInt(id));
+        roomServices.deleteRoom(id);
         List<Room> rooms = roomServices.getRooms();
         model.addAttribute("rooms", rooms);
 

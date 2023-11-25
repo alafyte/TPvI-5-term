@@ -51,9 +51,9 @@ public class TypeRoomsController {
 
 
     @GetMapping("/edit-type-room/{id}")
-    public ModelAndView editTypeRoom(Model model, @PathVariable String id) {
+    public ModelAndView editTypeRoom(Model model, @PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("EditTypeRoom");
-        TypeRoom typeRoom = typeRoomsServices.findTypeRooms(Integer.parseInt(id));
+        TypeRoom typeRoom = typeRoomsServices.findTypeRooms(id);
         model.addAttribute("typeroom", typeRoom);
         return modelAndView;
     }
@@ -72,8 +72,8 @@ public class TypeRoomsController {
 
 
     @GetMapping("/delete-type-room/{id}")
-    public ModelAndView deleteTypeRoom(ModelAndView modelAndView, @PathVariable String id) {
-        typeRoomsServices.deleteTypeRooms(Integer.parseInt(id));
+    public ModelAndView deleteTypeRoom(ModelAndView modelAndView, @PathVariable int id) {
+        typeRoomsServices.deleteTypeRooms(id);
         modelAndView.setViewName("ViewTypeRooms");
         List<TypeRoom> typerooms = typeRoomsServices.getTypeRooms();
         modelAndView.addObject("typerooms", typerooms);

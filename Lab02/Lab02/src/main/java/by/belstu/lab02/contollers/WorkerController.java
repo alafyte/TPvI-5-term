@@ -50,15 +50,14 @@ public class WorkerController {
                 createWorkerRequest.getEmail(),
                 createWorkerRequest.getExperience());
         workerServices.save(newWorker);
-        //emailSenderService.sendSimpleEmail(workerForm.getEmail(),"New worker", "Вы были добавленны как новый сотрудник");
 
         return new ResponseEntity<>(newWorker, HttpStatus.OK);
     }
 
     @GetMapping("/edit-worker/{id}")
-    public ModelAndView editWorker(ModelAndView modelAndView, @PathVariable String id) {
+    public ModelAndView editWorker(ModelAndView modelAndView, @PathVariable int id) {
         modelAndView.setViewName("EditWorker");
-        Worker worker = workerServices.findById(Integer.parseInt(id));
+        Worker worker = workerServices.findById(id);
         modelAndView.addObject("worker", worker);
         return modelAndView;
     }
@@ -82,9 +81,8 @@ public class WorkerController {
 
 
     @GetMapping("/delete-worker/{id}")
-    public ModelAndView deleteWorker(ModelAndView modelAndView, @PathVariable String id) {
-
-        workerServices.delete(Integer.parseInt(id));
+    public ModelAndView deleteWorker(ModelAndView modelAndView, @PathVariable int id) {
+        workerServices.delete(id);
         modelAndView.setViewName("ViewWorkers");
         modelAndView.addObject("workers", workerServices.findAll());
         return modelAndView;
