@@ -32,6 +32,14 @@ public class Guest {
     @Column
     private Date birthday;
 
+    public Guest(String firstName, String lastName, String secondName, String email, Date birthday) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.secondName = secondName;
+        this.email = email;
+        this.birthday = birthday;
+    }
+
     public String getFullName() {
         return lastName + " " + firstName + " " + secondName;
     }
