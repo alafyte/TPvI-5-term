@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр списка броней</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:insert="~{adminMenu :: copy}"></div>
+
+<h1 class="text-center">
+    Бронирование
+</h1>
+<div class="container">
+    <h2>
+        <a href="/create-reservation">Добавить бронь</a>
+    </h2>
+    <div id="error" style="color: red; font-style: italic;"></div>
+    <table class="table mt-3">
+        <tr>
+            <th scope="col">ID брони</th>
+            <th scope="col">Номер</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Тип номера</th>
+            <th scope="col">ФИО гостя</th>
+            <th scope="col">Количество гостей</th>
+            <th scope="col">Дата заеда</th>
+            <th scope="col">Дата выезда</th>
+            <th scope="col">Изменить</th>
+            <th scope="col">Удалить</th>
+        </tr>
+        <tr th:each="reservation : ${reservations}">
+            <td th:text="${reservation.getId()}"></td>
+            <td th:text="${reservation.getRoom().getNumber()}"></td>
+            <td th:text="${reservation.getRoom().getPrice()}"></td>
+            <td th:text="${reservation.getRoom().getTypeOfRooms()}"></td>
+            <td th:text="${reservation.getGuest().getFullName()}"></td>
+            <td th:text="${reservation.getGuestCount()}"></td>
+            <td th:text="${reservation.getDateInFormatted()}"></td>
+            <td th:text="${reservation.getDateOutFormatted()}"></td>
+            <td>
+                <a th:href="@{/edit-reservation/{id}(id=${reservation.getId()})}">Изменить</a>
+            </td>
+            <td>
+                <a th:href="@{/delete-reservation/{id}(id=${reservation.getId()})}">Удалить</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

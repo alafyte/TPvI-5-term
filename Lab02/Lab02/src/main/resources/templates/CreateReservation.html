@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание бронирования</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div th:insert="~{adminMenu :: copy}"></div>
+
+<div class="container w-50">
+    <h1 class="text-center">Добавить бронь</h1>
+    <div id="error" style="color: red; font-style: italic;"></div>
+    <form id="reservation-form" enctype="multipart/form-data" method="post">
+        <div class="mb-3">
+            <label class="form-label" for="type_room_id">Тип комнаты</label>
+            <select class="form-select" id="type_room_id" name="type_room_id" required>
+                <option th:each="typerooms : ${typeroomList}" th:value="${typerooms.getId()}"
+                        th:text="${typerooms.toString()}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="date_in">Дата заезда</label>
+            <input class="form-control" type="date" dataformatas="DD/MM/YYYY" id="date_in" name="date_in" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="date_out">Дата выезда</label>
+            <input class="form-control" type="date" dataformatas="DD/MM/YYYY" id="date_out" name="date_out" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="guest">ФИО гостя</label>
+            <select class="form-select" id="guest" name="guest" required>
+                <option th:each="guest : ${guests}" th:value="${guest.getId()}"
+                        th:text="${guest.getFullName()}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="guests_count">Количество гостей</label>
+            <input class="form-control" type="text" id="guests_count" name="guests_count" required/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+</div>
+
+<script type="text/javascript" th:src="@{/static/js/createReservation.js}"></script>
+</body>
+</html>

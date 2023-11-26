@@ -3,8 +3,11 @@ package by.belstu.lab02.models;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.sql.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 @Data
@@ -20,10 +23,6 @@ public class Reservation {
     Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
-
-    @OneToOne
     @JoinColumn(name = "room_id")
     Room room;
 
@@ -31,12 +30,32 @@ public class Reservation {
     @JoinColumn(name = "guest_id")
     Guest guest;
 
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     @Column
-    Date date_in;
+    LocalDate dateIn;
+
+    @DateTimeFormat(pattern="dd/MM/yyyy")
+    @Column
+    LocalDate dateOut;
 
     @Column
-    Date date_out;
+    int guestCount;
 
-    @Column
-    int guest_count;
+    public String getDateInFormatted() {
+        if (dateIn != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            formatter.format(dateIn);
+            return dateIn.format(formatter);
+        }
+        return null;
+    }
+
+    public String getDateOutFormatted() {
+        if (dateOut != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return dateOut.format(formatter);
+        }
+        return null;
+    }
+
 }
