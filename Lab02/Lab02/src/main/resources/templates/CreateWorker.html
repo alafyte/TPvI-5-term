@@ -14,6 +14,7 @@
 
 <div class="container w-50">
     <h1 class="text-center">Данные работникa</h1>
+    <div id="error" style="color: red; font-style: italic;">
     <form id="worker-form" enctype="multipart/form-data" method="POST">
         <div class="mb-3">
             <label class="form-label" for="lastname">Фамилия</label>
@@ -53,7 +54,6 @@
         <button type="submit" class="btn btn-primary">Создать</button>
     </form>
 </div>
-<div id="error" style="color: red; font-style: italic;">
 </div>
 <script type="text/javascript" th:src="@{/static/js/createWorker.js}"></script>
 </body>

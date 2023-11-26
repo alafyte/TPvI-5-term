@@ -45,8 +45,8 @@ public class GuestController {
     @PostMapping("/create-guest")
     public ResponseEntity<?> SaveGuest(@RequestBody GuestRequest guestRequest) {
         Guest newGuest = new Guest(
-                guestRequest.getLastname(),
                 guestRequest.getFirstname(),
+                guestRequest.getLastname(),
                 guestRequest.getSecondname(),
                 guestRequest.getEmail(),
                 guestRequest.getBirthday());
