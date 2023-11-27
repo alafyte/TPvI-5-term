@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @Slf4j
@@ -35,7 +36,8 @@ public class ReservationController {
 
     @Autowired
     UserServices userServices;
-
+    @Autowired
+    EmailSenderService emailSenderService;
 
     @GetMapping(value = {"/view-reservation"})
     public ModelAndView ViewReservation(Model model) {
@@ -66,15 +68,21 @@ public class ReservationController {
     @PostMapping(value = {"/create-reservation"})
     public ResponseEntity<?> CreateReservation(@RequestBody ReservationRequest reservationRequest) {
         Room freeRoom = getFreeRoom(reservationRequest.getType_room_id(), reservationRequest.getDate_in(), reservationRequest.getDate_out(), reservationRequest.getGuests_count());
+        Guest newGuest = guestServices.findGuest(reservationRequest.getGuest());
         if (freeRoom != null) {
             Reservation reservation = new Reservation();
-            Guest newGuest = guestServices.findGuest(reservationRequest.getGuest());
             reservation.setGuest(newGuest);
             reservation.setDateIn(reservationRequest.getDate_in());
             reservation.setDateOut(reservationRequest.getDate_out());
             reservation.setGuestCount(reservationRequest.getGuests_count());
             reservation.setRoom(freeRoom);
             reservationServices.save(reservation);
+            emailSenderService.sendSimpleEmail(newGuest.getEmail(), "Бронирование",
+                    "Здравствуйте, " + newGuest.getFirstName() + " " + newGuest.getSecondName() +
+                            "!\nНа ваше имя был забронирован номер. Информация о бронировании:\n" +
+                            "Номер: " + reservation.getRoom().getNumber() + "\nДата заезда: " + reservation.getDateInFormatted()
+                            + "\nДата выезда: " + reservation.getDateOutFormatted() + "\nКол-во гостей: "
+                            + reservation.getGuestCount() + "\nЦена (посуточно): " + reservation.getRoom().getPrice());
         }
         log.info("/create-reservation POST");
 
@@ -110,13 +118,28 @@ public class ReservationController {
     @PostMapping(value = {"/edit-reservation"})
     public ResponseEntity<?> UpdateReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation();
+        Reservation oldReservation = reservationServices.findById(reservationRequest.getId());
+        if (Objects.equals(oldReservation.getDateIn(), reservationRequest.getDate_in()) && Objects.equals(oldReservation.getDateOut(), reservationRequest.getDate_out())) {
+            reservation.setRoom(oldReservation.getRoom());
+        } else {
+            reservation.setRoom(getFreeRoom(reservationRequest.getType_room_id(), reservationRequest.getDate_in(), reservationRequest.getDate_out(), reservationRequest.getGuests_count()));
+        }
+
         reservation.setId(reservationRequest.getId());
-        reservation.setRoom(getFreeRoom(reservationRequest.getType_room_id(), reservationRequest.getDate_in(), reservationRequest.getDate_out(), reservationRequest.getGuests_count()));
         reservation.setDateIn(reservationRequest.getDate_in());
         reservation.setDateOut(reservationRequest.getDate_out());
-        reservation.setGuest(guestServices.findGuest(reservationRequest.getGuest()));
+        reservation.setGuest(oldReservation.getGuest());
         reservation.setGuestCount(reservationRequest.getGuests_count());
         reservationServices.save(reservation);
+
+        Guest newGuest = reservation.getGuest();
+
+        emailSenderService.sendSimpleEmail(newGuest.getEmail(), "Бронирование",
+                "Здравствуйте, " + newGuest.getFirstName() + " " + newGuest.getSecondName() +
+                        "!\nВаша бронь была изменена. Информация о бронировании:\n" +
+                        "Номер: " + reservation.getRoom().getNumber() + "\nДата заезда: " + reservation.getDateInFormatted()
+                        + "\nДата выезда: " + reservation.getDateOutFormatted() + "\nКол-во гостей: "
+                        + reservation.getGuestCount() + "\nЦена (посуточно): " + reservation.getRoom().getPrice());
         log.info("/edit-reservation POST");
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
@@ -124,8 +147,16 @@ public class ReservationController {
 
     @GetMapping(value = {"/delete-reservation/{id}"})
     public String DeleteReservation(Model model, @PathVariable("id") int id) {
-        reservationServices.delete(reservationServices.findById(id));
+        Reservation reservation = reservationServices.findById(id);
+        Guest newGuest = reservation.getGuest();
+        reservationServices.delete(reservation);
 
+        emailSenderService.sendSimpleEmail(newGuest.getEmail(), "Бронирование",
+                "Здравствуйте, " + newGuest.getFirstName() + " " + newGuest.getSecondName() +
+                        "!\nВаша бронь была отменена. Информация о бронировании:\n" +
+                        "Номер: " + reservation.getRoom().getNumber() + "\nДата заезда: " + reservation.getDateInFormatted()
+                        + "\nДата выезда: " + reservation.getDateOutFormatted() + "\nКол-во гостей: "
+                        + reservation.getGuestCount() + "\nЦена (посуточно): " + reservation.getRoom().getPrice());
         log.info("/delete-reservation GET");
         return "redirect:/view-reservation";
     }

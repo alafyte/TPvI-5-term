@@ -104,6 +104,7 @@ public class UserController {
         user.setWorker(workerServices.findById(registerWorkerRequest.getId()));
         userServices.saveUser(user);
 
+        emailSenderService.sendSimpleEmail(user.getWorker().getEmail(), "Регистрация", "Вы были успешно зарегистрированы в приложении");
         log.info("/register-worker POST");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

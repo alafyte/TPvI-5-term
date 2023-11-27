@@ -44,17 +44,6 @@
             <input class="form-control" type="date" dataformatas="DD/MM/YYYY" id="date_out" name="date_out" th:value="${reservation.getDateOut()}" required/>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="guest">ФИО гостя</label>
-            <select class="form-select" id="guest" name="guest" required>
-                <th:block th:each="guest : ${guests}">
-                <th:block th:switch="${guest.getId()}">
-                    <option th:value="${guest.getId()}" th:text="${guest.getFullName()}" selected th:case="${reservation.getGuest().getId()}"></option>
-                    <option th:value="${guest.getId()}" th:text="${guest.getFullName()}" th:case="*"></option>
-                </th:block>
-                </th:block>
-            </select>
-        </div>
-        <div class="mb-3">
             <label class="form-label" for="guests_count">Количество гостей</label>
             <input class="form-control" type="text" id="guests_count" name="guests_count" th:value="${reservation.getGuestCount()}" required/>
         </div>
