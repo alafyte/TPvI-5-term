@@ -1,7 +1,14 @@
 package by.belstu.lab02.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class AuthDto {
+
+    @NotBlank(message = "Логин не может быть пустым")
     private String login;
+
+    @NotBlank(message = "Пароль не может быть пустым")
     private String password;
 
     public AuthDto() {

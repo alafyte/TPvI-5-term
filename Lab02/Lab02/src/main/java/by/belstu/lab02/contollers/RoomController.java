@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,6 +66,10 @@ public class RoomController {
                                       @RequestParam("count_places") int count_places,
                                       @RequestParam("id_type_rooms") int id_type_rooms
     ) {
+
+        ResponseEntity<?> errorMessages = validateRoomRequest(number, count_places, id_type_rooms);
+        if (errorMessages != null) return errorMessages;
+
         String fileName = STATIC_PATH + fileUploadService.storeFile(file);
         TypeRoom typeRooms = typeRoomsServices.findTypeRooms(id_type_rooms);
         Room newRoom = new Room(number, fileName, typeRooms, count_places);
@@ -93,6 +98,9 @@ public class RoomController {
                                       @RequestParam("count_places") int count_places,
                                       @RequestParam("id_type_rooms") int id_type_rooms
     ) {
+        ResponseEntity<?> errorMessages = validateRoomRequest(number, count_places, id_type_rooms);
+        if (errorMessages != null) return errorMessages;
+
         Room oldRoom = roomServices.findRoom(id);
         TypeRoom typeRooms = typeRoomsServices.findTypeRooms(id_type_rooms);
         String fileName = "";
@@ -109,6 +117,15 @@ public class RoomController {
 
         log.info("/edit-room POST");
         return new ResponseEntity<>(newRoom, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> validateRoomRequest(@RequestParam("number") int number, @RequestParam("count_places") int count_places, @RequestParam("id_type_rooms") int id_type_rooms) {
+        if (number <= 0 || count_places <= 0 || id_type_rooms <= 0) {
+            List<String> errorMessages = new ArrayList<String>();
+            errorMessages.add("Числовые значения не могут быть меньше 0");
+            return new ResponseEntity<>(errorMessages, HttpStatus.OK);
+        }
+        return null;
     }
 
 

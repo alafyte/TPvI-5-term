@@ -12,6 +12,7 @@ import by.belstu.lab02.models.Worker;
 import by.belstu.lab02.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -48,8 +53,10 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+
     @Autowired
-    private UserDetailsServiceImpl customUserDetailsService;
+    private LocalValidatorFactoryBean validator;
+
 
     @Autowired
     private EmailSenderService emailSenderService;
@@ -92,21 +99,36 @@ public class UserController {
 
     @PostMapping("/register-worker")
     public ResponseEntity<?> registerUser(@RequestBody RegisterWorkerRequest registerWorkerRequest) {
-        User user = new User(
-                registerWorkerRequest.getLogin(),
-                passwordEncoder.encode(registerWorkerRequest.getPassword())
-        );
-        if (userServices.findByWorkerId(registerWorkerRequest.getId()).isPresent()) {
-            user.setId(userServices.findByWorkerId(registerWorkerRequest.getId()).get().getId());
+        try {
+            Set<ConstraintViolation<RegisterWorkerRequest>> violations = validator.validate(registerWorkerRequest);
+
+            if (!violations.isEmpty()) {
+                List<String> errorMessages = violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toList());
+                return new ResponseEntity<>(errorMessages, HttpStatus.OK);
+            }
+
+            User user = new User(
+                    registerWorkerRequest.getLogin(),
+                    passwordEncoder.encode(registerWorkerRequest.getPassword())
+            );
+            if (userServices.findByWorkerId(registerWorkerRequest.getId()).isPresent()) {
+                user.setId(userServices.findByWorkerId(registerWorkerRequest.getId()).get().getId());
+            }
+
+            user.setRoles(roleServices.findByName(Roles.WORKER).get());
+            user.setWorker(workerServices.findById(registerWorkerRequest.getId()));
+            userServices.saveUser(user);
+
+            emailSenderService.sendSimpleEmail(user.getWorker().getEmail(), "Регистрация", "Вы были успешно зарегистрированы в приложении");
+            log.info("/register-worker POST");
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            List<String> errorMessages = new ArrayList<String>();
+            errorMessages.add("Произошла ошибка при регистрации работника");
+            return new ResponseEntity<>(errorMessages, HttpStatus.OK);
         }
-
-        user.setRoles(roleServices.findByName(Roles.WORKER).get());
-        user.setWorker(workerServices.findById(registerWorkerRequest.getId()));
-        userServices.saveUser(user);
-
-        emailSenderService.sendSimpleEmail(user.getWorker().getEmail(), "Регистрация", "Вы были успешно зарегистрированы в приложении");
-        log.info("/register-worker POST");
-        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/login")
@@ -119,21 +141,37 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> userLogin(@RequestBody AuthDto adminAuthDto, HttpServletResponse response) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(adminAuthDto.getLogin(), adminAuthDto.getPassword()));
-        User user = userServices.findByLogin(adminAuthDto.getLogin()).orElseThrow();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication, user.getRoles().toString());
-        response.addCookie(new Cookie("java_token", token));
+    public ResponseEntity<?> userLogin(@RequestBody AuthDto adminAuthDto, HttpServletResponse response) {
 
-        LoginResponseDto responseDto = new LoginResponseDto();
-        responseDto.setSuccess(true);
-        responseDto.setMessage("login successful !!");
-        responseDto.setUser(user.getLogin(), user.getId());
+        try {
+            Set<ConstraintViolation<AuthDto>> violations = validator.validate(adminAuthDto);
 
-        log.info("/login POST");
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            if (!violations.isEmpty()) {
+                List<String> errorMessages = violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toList());
+                return new ResponseEntity<>(errorMessages, HttpStatus.OK);
+            }
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(adminAuthDto.getLogin(), adminAuthDto.getPassword()));
+            User user = userServices.findByLogin(adminAuthDto.getLogin()).orElseThrow();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtGenerator.generateToken(authentication, user.getRoles().toString());
+            response.addCookie(new Cookie("java_token", token));
+
+            LoginResponseDto responseDto = new LoginResponseDto();
+            responseDto.setSuccess(true);
+            responseDto.setMessage("login successful !!");
+            responseDto.setUser(user.getLogin(), user.getId());
+
+            log.info("/login POST");
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (Exception e) {
+            List<String> errorMessages = new ArrayList<String>();
+            errorMessages.add("Неверный логин или пароль");
+            return new ResponseEntity<>(errorMessages, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/view-users")
