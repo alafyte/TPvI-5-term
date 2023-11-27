@@ -12,6 +12,7 @@ import by.belstu.lab02.models.Worker;
 import by.belstu.lab02.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @CrossOrigin(origins = "*")
 public class UserController {
@@ -42,18 +44,18 @@ public class UserController {
 
     @Autowired
     private JwtGenerator jwtGenerator;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserDetailsServiceImpl customUserDetailsService;
-    private final EmailSenderService emailSenderService;
 
-    private final WorkerServices workerServices;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
-    public UserController(EmailSenderService emailSenderService, WorkerServices workerServices) {
-        this.emailSenderService = emailSenderService;
-        this.workerServices = workerServices;
-    }
+    @Autowired
+    private WorkerServices workerServices;
 
     @GetMapping(value = {"/"})
     public ModelAndView index(Model model) {
@@ -68,8 +70,11 @@ public class UserController {
             model.addAttribute("user", user);
             modelAndView.setViewName("indexAdmin");
         } else if (role.getName().equals(Roles.WORKER)) {
+            model.addAttribute("user", user);
             modelAndView.setViewName("indexWorker");
         }
+
+        log.info("/ GET");
         return modelAndView;
     }
 
@@ -79,6 +84,8 @@ public class UserController {
         List<Worker> workers = workerServices.findAll();
         modelAndView.addObject("workers", workers);
         modelAndView.setViewName("RegisterWorker");
+
+        log.info("/register-worker GET");
         return modelAndView;
     }
 
@@ -96,6 +103,8 @@ public class UserController {
         user.setRoles(roleServices.findByName(Roles.WORKER).get());
         user.setWorker(workerServices.findById(registerWorkerRequest.getId()));
         userServices.saveUser(user);
+
+        log.info("/register-worker POST");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -103,6 +112,8 @@ public class UserController {
     public ModelAndView authUser(Model model) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
+
+        log.info("/login GET");
         return modelAndView;
     }
 
@@ -119,6 +130,8 @@ public class UserController {
         responseDto.setSuccess(true);
         responseDto.setMessage("login successful !!");
         responseDto.setUser(user.getLogin(), user.getId());
+
+        log.info("/login POST");
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -128,6 +141,8 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("ViewUsers");
         modelAndView.addObject("users", users);
+
+        log.info("/view-users GET");
         return modelAndView;
     }
 

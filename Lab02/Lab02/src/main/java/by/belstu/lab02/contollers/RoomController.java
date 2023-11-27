@@ -23,8 +23,6 @@ import java.util.Objects;
 @Controller
 @CrossOrigin(origins = "*")
 public class RoomController {
-    // Список номеров
-
     private static final String STATIC_PATH = "/upload/images/";
 
     @Autowired
@@ -34,18 +32,21 @@ public class RoomController {
     @Autowired
     private FileUploadService fileUploadService;
 
-    public RoomController(RoomServices roomServices, TypeRoomServices typeRoomsServices, TypeRoomServices typeRoomsServices1) {
-        this.roomServices = roomServices;
-        this.typeRoomsServices = typeRoomsServices1;
-    }
-
-
     @GetMapping(value = {"/view-rooms"})
     public ModelAndView ViewRooms(Model model) {
         ModelAndView modelAndView = new ModelAndView("ViewRooms");
         List<Room> rooms = roomServices.getRooms();
         model.addAttribute("rooms", rooms);
         log.info("/view-rooms GET");
+        return modelAndView;
+    }
+
+    @GetMapping("view-rooms-worker")
+    public ModelAndView ViewRoomsWorker(Model model) {
+        ModelAndView modelAndView = new ModelAndView("ViewRoomsWorker");
+        List<Room> rooms = roomServices.getRooms();
+        model.addAttribute("rooms", rooms);
+        log.info("/view-rooms-worker GET");
         return modelAndView;
     }
 
@@ -73,7 +74,7 @@ public class RoomController {
         return new ResponseEntity<>(newRoom, HttpStatus.OK);
     }
 
-    //Вызов формы редактирования номера
+
     @GetMapping(value = {"/edit-room/{id}"})
     public ModelAndView EditRoom(Model model, @PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("EditRoom");

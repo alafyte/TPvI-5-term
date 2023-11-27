@@ -2,10 +2,16 @@ package by.belstu.lab02.contollers;
 
 import by.belstu.lab02.dto.GuestRequest;
 import by.belstu.lab02.models.Guest;
+import by.belstu.lab02.models.User;
+import by.belstu.lab02.repositories.UserRepository;
 import by.belstu.lab02.services.GuestServices;
+import by.belstu.lab02.services.UserDetailsImpl;
+import by.belstu.lab02.services.UserServices;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +24,21 @@ import java.util.List;
 @Controller
 @CrossOrigin(origins = "*")
 public class GuestController {
-    // Список гостей
-    private final GuestServices guestServices;
 
-    public GuestController(GuestServices guestServices) {
-        this.guestServices = guestServices;
-    }
+    @Autowired
+    private GuestServices guestServices;
+
+    @Autowired
+    private UserServices userServices;
 
     @GetMapping("/view-guests")
     public ModelAndView GuestList(Model model) {
+        UserDetailsImpl auth_user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userServices.findByLogin(auth_user.getUsername()).get();
         ModelAndView modelAndView = new ModelAndView("ViewGuest");
         List<Guest> guests = guestServices.getGuests();
         model.addAttribute("guests", guests);
+        modelAndView.addObject("user", user);
         log.info("/view-guests GET");
         return modelAndView;
     }
@@ -37,7 +46,10 @@ public class GuestController {
 
     @GetMapping("/create-guest")
     public ModelAndView SaveGuest(Model model) {
+        UserDetailsImpl auth_user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userServices.findByLogin(auth_user.getUsername()).get();
         ModelAndView modelAndView = new ModelAndView("CreateGuest");
+        modelAndView.addObject("user", user);
         log.info("/create-guest GET");
         return modelAndView;
     }
@@ -57,9 +69,12 @@ public class GuestController {
 
     @GetMapping(value = {"/edit-guest/{id}"})
     public ModelAndView UpdateGuest(Model model, @PathVariable("id") int id) {
+        UserDetailsImpl auth_user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userServices.findByLogin(auth_user.getUsername()).get();
         ModelAndView modelAndView = new ModelAndView("EditGuest");
         Guest guest = guestServices.findGuest(id);
         model.addAttribute("guest", guest);
+        modelAndView.addObject("user", user);
         log.info("/edit-guest GET");
         return modelAndView;
 

@@ -5,6 +5,7 @@ import by.belstu.lab02.dto.TypeRoomRequest;
 import by.belstu.lab02.models.TypeRoom;
 import by.belstu.lab02.services.TypeRoomServices;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,22 +20,30 @@ import java.util.List;
 @RequestMapping
 public class TypeRoomsController {
 
-    public final TypeRoomServices typeRoomsServices;
-
-    public TypeRoomsController(TypeRoomServices typeRoomsServices) {
-        this.typeRoomsServices = typeRoomsServices;
-    }
+    @Autowired
+    public TypeRoomServices typeRoomsServices;
 
     @GetMapping("/view-type-rooms")
     public ModelAndView typeRooms(Model model) {
         ModelAndView modelAndView = new ModelAndView("ViewTypeRooms");
         List<TypeRoom> typerooms = typeRoomsServices.getTypeRooms();
         model.addAttribute("typerooms", typerooms);
+        log.info("/view-type-rooms GET");
+        return modelAndView;
+    }
+
+    @GetMapping("/view-type-rooms-worker")
+    public ModelAndView typeRoomsWorker(Model model) {
+        ModelAndView modelAndView = new ModelAndView("ViewTypeRoomsWorker");
+        List<TypeRoom> typerooms = typeRoomsServices.getTypeRooms();
+        model.addAttribute("typerooms", typerooms);
+        log.info("/view-type-rooms-worker GET");
         return modelAndView;
     }
 
     @GetMapping("/create-type-room")
     public ModelAndView createTypeRoom(Model model) {
+        log.info("/create-type-room GET");
         return new ModelAndView("CreateTypeRoom");
     }
 
@@ -45,7 +54,7 @@ public class TypeRoomsController {
         float price = typeRoomRequest.getPrice();
         TypeRoom newTypeRoom = new TypeRoom(name, description, price);
         typeRoomsServices.saveTypeRooms(newTypeRoom);
-
+        log.info("/create-type-room POST");
         return new ResponseEntity<>(newTypeRoom, HttpStatus.OK);
     }
 
@@ -55,6 +64,7 @@ public class TypeRoomsController {
         ModelAndView modelAndView = new ModelAndView("EditTypeRoom");
         TypeRoom typeRoom = typeRoomsServices.findTypeRooms(id);
         model.addAttribute("typeroom", typeRoom);
+        log.info("/edit-type-room GET");
         return modelAndView;
     }
 
@@ -66,7 +76,7 @@ public class TypeRoomsController {
         float price = typeRoomRequest.getPrice();
         TypeRoom newTypeRoom = new TypeRoom(idnew, name, description, price);
         typeRoomsServices.updateTypeRooms(idnew, newTypeRoom);
-
+        log.info("/edit-type-room POST");
         return new ResponseEntity<>(newTypeRoom, HttpStatus.OK);
     }
 
@@ -74,6 +84,7 @@ public class TypeRoomsController {
     @GetMapping("/delete-type-room/{id}")
     public String deleteTypeRoom(ModelAndView modelAndView, @PathVariable int id) {
         typeRoomsServices.deleteTypeRooms(id);
+        log.info("/delete-type-room GET");
         return "redirect:/view-type-rooms";
     }
 

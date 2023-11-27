@@ -2,17 +2,13 @@ package by.belstu.lab02.contollers;
 
 
 import by.belstu.lab02.dto.ReservationRequest;
-import by.belstu.lab02.models.Guest;
-import by.belstu.lab02.models.Reservation;
-import by.belstu.lab02.models.Room;
-import by.belstu.lab02.models.TypeRoom;
-import by.belstu.lab02.services.GuestServices;
-import by.belstu.lab02.services.ReservationServices;
-import by.belstu.lab02.services.RoomServices;
-import by.belstu.lab02.services.TypeRoomServices;
+import by.belstu.lab02.models.*;
+import by.belstu.lab02.services.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,34 +21,44 @@ import java.util.List;
 @Slf4j
 @RequestMapping
 public class ReservationController {
-    public final ReservationServices reservationServices;
-    public final TypeRoomServices typeRoomServices;
-    public final RoomServices roomServices;
-    public final GuestServices guestServices;
+    @Autowired
+    public ReservationServices reservationServices;
 
-    public ReservationController(ReservationServices reservationServices, TypeRoomServices typeRoomServices, RoomServices roomServices, GuestServices guestServices) {
-        this.reservationServices = reservationServices;
-        this.typeRoomServices = typeRoomServices;
-        this.roomServices = roomServices;
-        this.guestServices = guestServices;
-    }
+    @Autowired
+    public TypeRoomServices typeRoomServices;
+
+    @Autowired
+    public RoomServices roomServices;
+
+    @Autowired
+    public GuestServices guestServices;
+
+    @Autowired
+    UserServices userServices;
+
 
     @GetMapping(value = {"/view-reservation"})
     public ModelAndView ViewReservation(Model model) {
+        UserDetailsImpl auth_user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userServices.findByLogin(auth_user.getUsername()).get();
         ModelAndView modelAndView = new ModelAndView("ViewReservation");
         List<Reservation> reservations = reservationServices.findAll();
         modelAndView.addObject("reservations", reservations);
+        modelAndView.addObject("user", user);
         log.info("/view-reservation GET");
         return modelAndView;
     }
 
     @GetMapping(value = {"/create-reservation"})
     public ModelAndView CreateReservation(ModelAndView model) {
+        UserDetailsImpl auth_user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userServices.findByLogin(auth_user.getUsername()).get();
         ModelAndView modelAndView = new ModelAndView("CreateReservation");
         List<TypeRoom> typeRooms = typeRoomServices.getTypeRooms();
         List<Guest> guests = guestServices.getGuests();
         modelAndView.addObject("typeroomList", typeRooms);
         modelAndView.addObject("guests", guests);
+        modelAndView.addObject("user", user);
         log.info("/create-reservation GET");
         return modelAndView;
     }
@@ -87,6 +93,8 @@ public class ReservationController {
 
     @GetMapping(value = {"/edit-reservation/{id}"})
     public ModelAndView UpdateReservation(Model model, @PathVariable("id") int id) {
+        UserDetailsImpl auth_user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userServices.findByLogin(auth_user.getUsername()).get();
         ModelAndView modelAndView = new ModelAndView("EditReservation");
         Reservation reservation = reservationServices.findById(id);
         model.addAttribute("reservation", reservation);
@@ -94,6 +102,7 @@ public class ReservationController {
         List<TypeRoom> typeRooms = typeRoomServices.getTypeRooms();
         modelAndView.addObject("typeroomList", typeRooms);
         modelAndView.addObject("guests", guests);
+        modelAndView.addObject("user", user);
         log.info("/edit-reservation GET");
         return modelAndView;
     }
