@@ -8,7 +8,7 @@ form.onsubmit = async (event) => {
         body:  new FormData(form)
     }).then(async (res) => {
         let error_messages = await res.json();
-        if (error_messages.length === 0) {
+        if (!Array.isArray(error_messages) || error_messages.length === 0) {
             window.location.href = '/view-rooms';
         } else {
             let error_text = document.getElementById("error");
