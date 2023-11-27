@@ -22,7 +22,7 @@ form.onsubmit = async (event) => {
         } else {
             let error_text = document.getElementById("error");
             error_messages.forEach(message => {
-                error_text.innerHTML += `${message}\n`;
+                error_text.innerHTML += `${message}<br/>`;
             })
         }
     })
