@@ -10,7 +10,10 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<div th:insert="~{adminMenu :: copy}"></div>
+<th:block th:switch="${user.getRoles().getName().toString()}">
+    <div th:insert="~{adminMenu :: copy}" th:case="ADMIN"></div>
+    <div th:insert="~{workerMenu :: copy}" th:case="WORKER"></div>
+</th:block>
 
 <div class="container w-50">
     <h1 class="text-center">Добавить гостя</h1>

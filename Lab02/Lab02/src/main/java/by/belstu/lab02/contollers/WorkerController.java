@@ -5,6 +5,7 @@ import by.belstu.lab02.models.Worker;
 import by.belstu.lab02.services.EmailSenderService;
 import by.belstu.lab02.services.WorkerServices;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,25 +18,29 @@ import java.util.List;
 @Controller
 @CrossOrigin(origins = "*")
 public class WorkerController {
-    public final WorkerServices workerServices;
-    public final EmailSenderService emailSenderService;
 
-    public WorkerController(WorkerServices workerServices, EmailSenderService emailSenderService) {
-        this.workerServices = workerServices;
-        this.emailSenderService = emailSenderService;
-    }
+    @Autowired
+    public WorkerServices workerServices;
+
+    @Autowired
+    public EmailSenderService emailSenderService;
+
 
     @GetMapping("/view-workers")
     public ModelAndView workers(ModelAndView modelAndView) {
         List<Worker> workers = workerServices.findAll();
         modelAndView.addObject("workers", workers);
         modelAndView.setViewName("ViewWorkers");
+
+        log.info("/view-workers GET");
         return modelAndView;
     }
 
     @GetMapping("/create-worker")
     public ModelAndView createWorker(ModelAndView modelAndView) {
         modelAndView.setViewName("CreateWorker");
+
+        log.info("/create-worker GET");
         return modelAndView;
     }
 
@@ -50,7 +55,7 @@ public class WorkerController {
                 createWorkerRequest.getEmail(),
                 createWorkerRequest.getExperience());
         workerServices.save(newWorker);
-
+        log.info("/create-worker POST");
         return new ResponseEntity<>(newWorker, HttpStatus.OK);
     }
 
@@ -59,6 +64,8 @@ public class WorkerController {
         modelAndView.setViewName("EditWorker");
         Worker worker = workerServices.findById(id);
         modelAndView.addObject("worker", worker);
+
+        log.info("/edit-worker GET");
         return modelAndView;
     }
 
@@ -76,6 +83,7 @@ public class WorkerController {
                 );
         workerServices.save(newWorker);
 
+        log.info("/edit-worker POST");
         return new ResponseEntity<>(newWorker, HttpStatus.OK);
     }
 
@@ -83,6 +91,8 @@ public class WorkerController {
     @GetMapping("/delete-worker/{id}")
     public String deleteWorker(ModelAndView modelAndView, @PathVariable int id) {
         workerServices.delete(id);
+
+        log.info("/delete-worker GET");
         return "redirect:/view-workers";
     }
 

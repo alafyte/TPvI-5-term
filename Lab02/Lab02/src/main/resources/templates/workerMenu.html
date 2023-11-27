@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Меню</title>
+</head>
+<body>
+<div th:fragment="copy" class="container">
+    <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a th:href="@{/view-guests}" class="nav-link">Гости</a></li>
+            <li class="nav-item"><a th:href="@{/view-rooms-worker}" class="nav-link">Номера</a></li>
+            <li class="nav-item"><a th:href="@{/view-type-rooms-worker}" class="nav-link">Типы номеров</a></li>
+            <li class="nav-item"><a th:href="@{/view-reservation}" class="nav-link">Бронирование</a></li>
+            <li class="nav-item"><a th:href="@{/logout}" class="nav-link">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+</body>
+</html>
