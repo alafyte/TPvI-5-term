@@ -12,7 +12,7 @@
 <body>
 <div class="container w-25 mt-5">
     <h3 class="text-center">Войти в аккаунт</h3>
-
+    <div id="error" style="color: red; font-style: italic;"></div>
     <form id="login-form" enctype="multipart/form-data" method="POST">
         <div class="mb-3">
             <label for="login" class="form-label"><b>Имя пользователя</b></label>
@@ -26,7 +26,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Войти</button>
     </form>
-    <div id="error" style="color: red; font-style: italic;"></div>
 </div>
 
 <script type="text/javascript" th:src="@{static/js/login.js}"></script>

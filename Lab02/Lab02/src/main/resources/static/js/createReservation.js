@@ -16,12 +16,14 @@ form.onsubmit = async (event) => {
         },
         body: JSON.stringify(jsonRequestData)
     }).then(async (res) => {
-        if (res.ok) {
+        let error_messages = await res.json();
+        if (error_messages.length === 0) {
             window.location.href = '/view-reservation';
         } else {
-            let error = document.getElementById("error");
-            let error_message = await res.json();
-            error.innerHTML = `${error_message.error}`;
+            let error_text = document.getElementById("error");
+            error_messages.forEach(message => {
+                error_text.innerHTML += `${message}\n`;
+            })
         }
     })
 }

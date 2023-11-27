@@ -17,15 +17,14 @@ form.onsubmit = async (event) => {
         },
         body: JSON.stringify(jsonRequestData)
     }).then(async (res) => {
-        if (res.status === 200) {
+        let error_messages = await res.json();
+        if (error_messages.length === 0) {
             window.location.href = '/view-guests';
         } else {
-            let error = document.getElementById("error");
-            let error_text = document.getElementById("error_text");
-            error.classList.remove('hidden');
-            let error_message = await res.json();
-
-            error_text.innerHTML = `${error_message.error}`;
+            let error_text = document.getElementById("error");
+            error_messages.forEach(message => {
+                error_text.innerHTML += `${message}\n`;
+            })
         }
     })
 };
