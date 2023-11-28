@@ -131,10 +131,13 @@ public class RoomController {
 
     @GetMapping(value = {"/delete-room/{id}"})
     public String DeleteRoom(Model model, @PathVariable int id) {
-        roomServices.deleteRoom(id);
-
-        log.info("/delete-room GET");
-        return "redirect:/view-rooms";
+        try {
+            roomServices.deleteRoom(id);
+            log.info("/delete-room GET");
+            return "redirect:/view-rooms";
+        } catch (Exception e) {
+            return "redirect:/view-rooms";
+        }
     }
 
 }

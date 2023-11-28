@@ -22,7 +22,6 @@ public class GuestRequest {
     @Email(message = "Неверный формат email")
     private String email;
 
-    @NotBlank(message = "Дата рождения обязательна")
     @Past(message = "Неверная дата рождения")
     private Date birthday;
 }

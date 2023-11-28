@@ -86,7 +86,7 @@ public class ReservationController {
                 return new ResponseEntity<>(errorMessages, HttpStatus.OK);
             }
 
-            if(reservationRequest.getDate_in().isAfter(reservationRequest.getDate_out())) {
+            if (reservationRequest.getDate_in().isAfter(reservationRequest.getDate_out())) {
                 List<String> errorMessages = new ArrayList<String>();
                 errorMessages.add("Неккоректные дата заезда/выезда");
                 return new ResponseEntity<>(errorMessages, HttpStatus.OK);
@@ -168,9 +168,14 @@ public class ReservationController {
             } else {
                 reservation.setRoom(getFreeRoom(reservationRequest.getType_room_id(), reservationRequest.getDate_in(), reservationRequest.getDate_out(), reservationRequest.getGuests_count()));
             }
-            if(reservationRequest.getDate_in().isAfter(reservationRequest.getDate_out())) {
+            if (reservationRequest.getDate_in().isAfter(reservationRequest.getDate_out())) {
                 List<String> errorMessages = new ArrayList<String>();
                 errorMessages.add("Неккоректные дата заезда/выезда");
+                return new ResponseEntity<>(errorMessages, HttpStatus.OK);
+            }
+            if (reservationRequest.getGuests_count() > reservation.getRoom().getCountOfPlaces()) {
+                List<String> errorMessages = new ArrayList<String>();
+                errorMessages.add("Количество гостей не допустимо для данного типа номера");
                 return new ResponseEntity<>(errorMessages, HttpStatus.OK);
             }
 
@@ -201,17 +206,22 @@ public class ReservationController {
 
     @GetMapping(value = {"/delete-reservation/{id}"})
     public String DeleteReservation(Model model, @PathVariable("id") int id) {
-        Reservation reservation = reservationServices.findById(id);
-        Guest newGuest = reservation.getGuest();
-        reservationServices.delete(reservation);
+        try {
+            Reservation reservation = reservationServices.findById(id);
+            Guest newGuest = reservation.getGuest();
+            reservationServices.delete(reservation);
 
-        emailSenderService.sendSimpleEmail(newGuest.getEmail(), "Бронирование",
-                "Здравствуйте, " + newGuest.getFirstName() + " " + newGuest.getSecondName() +
-                        "!\nВаша бронь была отменена. Информация о бронировании:\n" +
-                        "Номер: " + reservation.getRoom().getNumber() + "\nДата заезда: " + reservation.getDateInFormatted()
-                        + "\nДата выезда: " + reservation.getDateOutFormatted() + "\nКол-во гостей: "
-                        + reservation.getGuestCount() + "\nЦена (посуточно): " + reservation.getRoom().getPrice());
-        log.info("/delete-reservation GET");
-        return "redirect:/view-reservation";
+            emailSenderService.sendSimpleEmail(newGuest.getEmail(), "Бронирование",
+                    "Здравствуйте, " + newGuest.getFirstName() + " " + newGuest.getSecondName() +
+                            "!\nВаша бронь была отменена. Информация о бронировании:\n" +
+                            "Номер: " + reservation.getRoom().getNumber() + "\nДата заезда: " + reservation.getDateInFormatted()
+                            + "\nДата выезда: " + reservation.getDateOutFormatted() + "\nКол-во гостей: "
+                            + reservation.getGuestCount() + "\nЦена (посуточно): " + reservation.getRoom().getPrice());
+            log.info("/delete-reservation GET");
+            return "redirect:/view-reservation";
+        } catch (Exception e) {
+            return "redirect:/view-reservation";
+        }
+
     }
 }
