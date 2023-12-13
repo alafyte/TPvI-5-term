@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "GUEST")
@@ -30,9 +32,9 @@ public class Guest {
     private String email;
 
     @Column
-    private Date birthday;
+    private LocalDate birthday;
 
-    public Guest(String firstName, String lastName, String secondName, String email, Date birthday) {
+    public Guest(String firstName, String lastName, String secondName, String email, LocalDate birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.secondName = secondName;
@@ -42,6 +44,15 @@ public class Guest {
 
     public String getFullName() {
         return lastName + " " + firstName + " " + secondName;
+    }
+
+    public String getBirthdayFormatted() {
+        if (birthday != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            formatter.format(birthday);
+            return birthday.format(formatter);
+        }
+        return null;
     }
 
 }

@@ -37,7 +37,7 @@
             <td th:text="${guest.getLastName()}"></td>
             <td th:text="${guest.getFirstName()}"></td>
             <td th:text="${guest.getSecondName()}"></td>
-            <td th:text="${guest.getBirthday()}"></td>
+            <td th:text="${guest.getBirthdayFormatted()}"></td>
             <td th:text="${guest.getEmail()}"></td>
             <td>
                 <a th:href="@{/edit-guest/{id}(id=${guest.id})}">Изменить</a>

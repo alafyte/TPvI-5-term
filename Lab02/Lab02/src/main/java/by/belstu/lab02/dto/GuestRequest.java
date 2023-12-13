@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.*;
 
 @Data
@@ -23,5 +25,5 @@ public class GuestRequest {
     private String email;
 
     @Past(message = "Неверная дата рождения")
-    private Date birthday;
+    private LocalDate birthday;
 }

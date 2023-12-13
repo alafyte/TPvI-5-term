@@ -110,7 +110,7 @@ public class ReservationController {
                                 + reservation.getGuestCount() + "\nЦена (посуточно): " + reservation.getRoom().getPrice());
             } else {
                 List<String> errorMessages = new ArrayList<String>();
-                errorMessages.add("Нет свободных номеров на эти даты/тип номера/кол-во гостей");
+                errorMessages.add("Нет свободных номеров на эти даты/кол-во гостей");
                 return new ResponseEntity<>(errorMessages, HttpStatus.OK);
             }
             log.info("/create-reservation POST");

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -108,7 +109,7 @@ public class GuestController {
             String firstname = guestRequest.getFirstname();
             String secondname = guestRequest.getSecondname();
             String email = guestRequest.getEmail();
-            Date birthday = guestRequest.getBirthday();
+            LocalDate birthday = guestRequest.getBirthday();
             Guest newGuest = new Guest(id, firstname, lastname, secondname, email, birthday);
             guestServices.updateGuest(newGuest);
             log.info("edit-guest POST");
