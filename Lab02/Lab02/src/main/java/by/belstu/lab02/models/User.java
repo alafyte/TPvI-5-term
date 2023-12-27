@@ -20,7 +20,7 @@ public class User {
     @JoinColumn(name = "worker_id")
     Worker worker;
 
-    @Column
+    @Column(unique = true)
     String login;
 
     @Column
